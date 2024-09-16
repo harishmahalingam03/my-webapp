@@ -1,9 +1,9 @@
 version: 0.2
-#env:
-  #variables:
-    #AWS_DEFAULT_REGION: "us-east-1"
-    #AWS_ACCOUNT_ID: "270514764245"
-    #ECR_REGISTRY: "270514764245.dkr.ecr.us-east-1.amazonaws.com/static-website"
+env:
+  variables:
+    AWS_DEFAULT_REGION: "us-east-1"
+    AWS_ACCOUNT_ID: "270514764245"
+    ECR_REGISTRY: "270514764245.dkr.ecr.us-east-1.amazonaws.com/static-website"
 
 phases:
     commands:
@@ -13,7 +13,7 @@ phases:
       - docker --version
       - pip install awscli
       - aws --version
-      - pip install docker-credential-ecr-login
+      # - pip install docker-credential-ecr-login
   pre_build:
     commands:
       - echo "Logging in to Amazon ECR"
