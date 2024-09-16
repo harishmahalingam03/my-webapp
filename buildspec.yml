@@ -13,7 +13,6 @@ phases:
       - docker --version
       - pip install awscli
       - aws --version
-      #pip install docker-credential-ecr-login
   pre_build:
     commands:
       - echo "Logging in to Amazon ECR"
