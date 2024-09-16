@@ -10,7 +10,7 @@ phases:
       docker: 19  # Specifies the Docker version (you can adjust this)
     commands:
       - echo "Installing dependencies"
-      - yum update -y
+      - aptupdate -y
      # - yum install -y jq  # Optional, useful for parsing JSON in scripts
       - echo "Ensuring Docker is available"
   pre_build:
