@@ -18,7 +18,7 @@ phases:
     commands:
       - echo "Logging in to Amazon ECR"
       - echo "$AWS_DEFAULT_REGION"
-      - aws ecr get-login-password --region us-east-1 | sudo docker login --username AWS --password-stdin 270514764245.dkr.ecr.us-east-1.amazonaws.com
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | sudo docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com
   build:
     commands:
       - echo "Building the Docker image"
