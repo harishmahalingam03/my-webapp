@@ -3,10 +3,11 @@ env:
   variables:
     AWS_DEFAULT_REGION: "us-east-1"
     AWS_ACCOUNT_ID: "270514764245"
-    ECR_REGISTRY: "270514764245.dkr.ecr.us-east-1.amazonaws.com/static-website"
+    ECR_REGISTRY: "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/static-website"
 
 phases:
-  commands:
+  install:
+    commands:
       - echo "Installing dependencies"
       - sudo apt update -y
       - sudo apt install -y docker.io
@@ -16,17 +17,16 @@ phases:
   pre_build:
     commands:
       - echo "Logging in to Amazon ECR"
-      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 270514764245.dkr.ecr.us-east-1.amazonaws.com/static-website
-      #$(aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY)
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
   build:
     commands:
       - echo "Building the Docker image"
       - docker build -t static-website .
-      - docker tag static-website:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/static-website:latest
+      - docker tag static-website:latest $ECR_REGISTRY:latest
   post_build:
     commands:
       - echo "Pushing the Docker image"
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/static-website:latest
+      - docker push $ECR_REGISTRY:latest
 artifacts:
   files:
     - '**/*'
