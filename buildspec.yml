@@ -1,0 +1,43 @@
+version: 0.2
+env:
+  variables:
+    AWS_DEFAULT_REGION: "us-east-1"
+    AWS_ACCOUNT_ID: "270514764245"
+
+phases:
+  install:
+    runtime-versions:
+      docker: 19  # Specifies the Docker version (you can adjust this)
+    commands:
+      - echo "Installing dependencies"
+      - yum update -y
+     # - yum install -y jq  # Optional, useful for parsing JSON in scripts
+      - echo "Ensuring Docker is available"
+  pre_build:
+    commands:
+      - echo "Logging in to Amazon ECR"
+      # Authenticate to the ECR registry using the AWS CLI
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+      - echo "ECR login successful"
+      - echo "Starting pre-build phase"
+      # Create the ECR repository if it doesn't already exist (optional)
+      - |
+        if ! aws ecr describe-repositories --repository-names "static-website" --region $AWS_DEFAULT_REGION > /dev/null 2>&1; then
+          aws ecr create-repository --repository-name "static-website" --region $AWS_DEFAULT_REGION
+        fi
+  build:
+    commands:
+      - echo "Building the Docker image"
+      - docker build -t static-website .
+      # Tag the Docker image with the latest version and repository URL
+      - docker tag static-website:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/static-website:latest
+  post_build:
+    commands:
+      - echo "Pushing the Docker image to Amazon ECR"
+      # Push the Docker image to ECR
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/static-website:latest
+      - echo "Docker image successfully pushed"
+artifacts:
+  files:
+    - '**/*'
+    # If you want to store build logs or other outputs, specify the paths here
