@@ -17,16 +17,16 @@ phases:
   pre_build:
     commands:
       - echo "Logging in to Amazon ECR"
-      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | sudo docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com
+      - aws ecr get-login-password --region us-east-1 | sudo docker login --username AWS --password-stdin 270514764245.dkr.ecr.us-east-1.amazonaws.com
   build:
     commands:
       - echo "Building the Docker image"
       - docker build -t static-website .
-      - docker tag static-website:latest $ECR_REGISTRY
+      - docker tag static-website:latest 270514764245.dkr.ecr.us-east-1.amazonaws.com/static-website
   post_build:
     commands:
       - echo "Pushing the Docker image"
-      - docker push $ECR_REGISTRY
+      - docker push 270514764245.dkr.ecr.us-east-1.amazonaws.com/static-website
 artifacts:
   files:
     - '**/*'
