@@ -6,7 +6,7 @@ env:
     ECR_REGISTRY: "270514764245.dkr.ecr.us-east-1.amazonaws.com/static-website"
 
 phases:
-    commands:
+  commands:
       - echo "Installing dependencies"
       - sudo apt update -y
       - sudo apt install -y docker.io
