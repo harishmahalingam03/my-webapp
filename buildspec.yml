@@ -12,7 +12,7 @@ phases:
       - echo "Installing dependencies"
       - sudo apt update -y
       - sudo apt install -y docker.io
-      - sudo systemctl start docker
+      #- sudo systemctl start docker
   pre_build:
     commands:
       - echo "Logging in to Amazon ECR"
