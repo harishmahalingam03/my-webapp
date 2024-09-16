@@ -6,15 +6,13 @@ env:
     ECR_REGISTRY: "270514764245.dkr.ecr.us-east-1.amazonaws.com/static-website"
 
 phases:
-  install:
-    runtime-versions:
-      docker: 20
-      aws-cli: 1.x
     commands:
       - echo "Installing dependencies"
       - sudo apt update -y
       - sudo apt install -y docker.io
+      - docker --version
       - pip install awscli
+      - aws --version
       - pip install docker-credential-ecr-login
       #- sudo systemctl start docker
   pre_build:
